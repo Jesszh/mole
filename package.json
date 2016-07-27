@@ -2,19 +2,20 @@
   "name": "mole",
   "version": "0.0.1",
   "keyword": [
+    "short url",
     "stylus",
     "responsive",
     "jade",
-    "jimustock"
+    "mongodb"
   ],
-  "homepage": "http://bbae.com",
+  "homepage": "http://jesszh.com",
   "author": "Jess Zhang",
   "css": "dist/css/mole.css",
   "js": "dist/js/mole.js",
   "stylus": "stylus/mole.stylus",
   "repository": {
     "type": "git",
-    "url": "git@git.jimubox.com:zhangjiesi/mole.git"
+    "url": "git@github.com:Jesszh/mole.git"
   },
   "private": true,
   "scripts": {
