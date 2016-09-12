@@ -1,0 +1,25 @@
+extends ../shared/layout
+
+block content
+	div(class='container')
+		h1 #{invitee.name}
+		if invitee.isCheckedIn
+			div(class='label label-success') 已签到 #{invitee.checkedInAt}
+		else
+			div(class='label label-danger')  未签到
+		hr
+		h3 手机 #{invitee.phone}
+		h3 角色 #{invitee.role}
+		h3 备注 #{invitee.remark}
+		h3 是否参与抽奖 #{invitee.isAllowedToDraw}
+		h3 中奖 #{invitee.isWinner}
+		h3 奖项 #{invitee.reward}
+		hr 
+		if !invitee.isCheckedIn
+			form(action='/invitee/check', method='post')
+				input(name='id',type='hidden', value='#{invitee._id}')
+				button(class='btn btn-primary btn-lg') 签到
+		else
+			form(action='/invitee/recall', method='post')
+				input(name='id',type='hidden', value='#{invitee._id}')
+				button(class='btn btn-danger btn-lg') 撤回

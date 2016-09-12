@@ -1,0 +1,34 @@
+extends ../shared/layout
+
+
+block content
+	- var id = invitee ? invitee._id : ''
+	- var name = invitee ? invitee.name : ''
+	- var phone = invitee ? invitee.phone : ''
+	- var role = invitee ? invitee.role : ''
+	- var isAllowedToDraw = invitee ? invitee.isAllowedToDraw : ''
+	- var remark = invitee ? invitee.remark : ''
+
+	div(class='container')
+		h1 编辑
+		hr
+		form(action='/invitee/edit', method='post')
+			input(name='id',type='hidden' value='#{id}')
+			div(class='form-group')
+				label(class='form-label') 姓名
+				input(class='form-control input-lg',name='name',type='text', value='#{name}')
+			div(class='form-group')
+				label(class='form-label') 手机
+				input(class='form-control input-lg',name='phone',type='text' value='#{phone}')
+			div(class='form-group')
+				label(class='form-label') 角色
+				input(class='form-control input-lg',name='role',type='text' value='#{role}')
+			div(class='form-group')
+				label(class='form-label') 是否参与抽奖
+				input(class='form-control input-lg',name='isAllowedToDraw',type='text' value='#{isAllowedToDraw}')
+			div(class='form-group')
+				label(class='form-label') 备注
+				input(class='form-control input-lg',name='remark',type='text' value='#{remark}')
+			button(type='submit', class='btn btn-primary') 提交
+		
+

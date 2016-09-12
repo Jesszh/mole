@@ -1,0 +1,35 @@
+extends ../shared/layout
+
+block content
+	div(class='container')
+		form(action='/invitee/list', method='get')
+			div(class='form-group')
+				input(class='form-control input-lg',name='key',type='text', placeholder='输入手机号搜索')
+		if key
+			hr
+			h4 
+				span(class='text-danger') #{key} 
+				| 搜索结果
+			hr
+		table(class='table table-strip')
+			thead
+				tr
+					th 姓名
+					th 手机
+					th 角色
+					th 是否签到
+					th 
+						//- a(class='btn btn-primary btn-sm', href='/invitee/create') 增加
+			tbody
+				each invitee in invitees
+					tr
+						td #{invitee.name}
+						td #{invitee.phone}
+						td #{invitee.role}
+						td 
+							if !invitee.isCheckedIn
+								span(class='label label-warning') 未签到
+							else
+								span(class='label label-success') 已签到
+						td 
+							a(class='btn btn-default btn-sm', href='/invitee/#{invitee._id}') 详情
