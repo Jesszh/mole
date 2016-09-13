@@ -1,0 +1,20 @@
+extends ../shared/layout
+
+block content
+	div(class='container')
+		table(class='table table-strip')
+			thead
+				tr
+					th hash
+					th url
+					th hits
+					th
+						a(class='btn btn-primary btn-sm', href='/admin/edit') 增加
+			tbody
+				each item in list
+					tr
+						td #{item.hash}
+						td #{item.URL}
+						td #{item.hits}
+						td
+							a(class='btn btn-default btn-sm', href='/admin/edit?hash=#{item.hash}') 详情

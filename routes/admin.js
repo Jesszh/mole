@@ -7,17 +7,17 @@ var short = require("../lib/short");
 var filter = require('../lib/filter');
 var logger = require('morgan');
 
+router.get('/', function(req, res) {
+  res.redirect('/');
+});
+
 /* GET home page. */
 router.get('/list', filter.isAuthenticated, function(req, res, next) {
 
+  var listURLsPromise = short.list();
 
-  // promise to retrieve all shortened URLs
-  listURLsPromise = short.list();
-
-  // output all resulting shortened url db docs
-  listURLsPromise.then(function(URLsDocument) {
-
-    res.send(formatResult("Success","操作成功",URLsDocument));
+  listURLsPromise.then(function(list) {
+    res.render('admin/list',{'list':list});
 
   }, function(error) {
     if (error) {
@@ -27,52 +27,57 @@ router.get('/list', filter.isAuthenticated, function(req, res, next) {
 
 });
 
-router.get('/create', filter.isAuthenticated, function(req, res, nest) {
-  var url = req.query.url;
+router.get('/edit', filter.isAuthenticated, function(req, res, nest) {
+  var hash = req.query.hash;
 
-  // promise to generate a shortened URL.
-  var shortURLPromise = short.generate({
-    URL : url
-  });
+  if(hash == undefined){
+    res.render('admin/edit');
+  }else{
 
-  // gets back the short url document, and then retrieves it
-  shortURLPromise.then(function(mongodbDoc) {
-    short.retrieve(mongodbDoc.hash).then(function(result) {
-      res.send(formatResult("Success","操作成功",result));
+    short.retrieve(hash).then(function(result) {
+      res.render('admin/edit',{'model':result});
     }, function(error) {
+      if (error) {
+        console.log(error);
+        res.status(404);
+      }
+    });
+  }
+
+});
+
+router.post('/edit', filter.isAuthenticated, function(req, res, nest) {
+  var url = req.body.URL;
+  var hash = req.body.hash;
+
+  if(hash == '') {
+    // promise to generate a shortened URL.
+    short.generate({
+      URL: url
+    }).then(function (mongodbDoc) {
+      short.retrieve(mongodbDoc.hash).then(function (result) {
+        res.redirect('/admin/list');
+      }, function (error) {
+        if (error) {
+          throw new Error(error);
+        }
+      });
+    }, function (error) {
       if (error) {
         throw new Error(error);
       }
     });
-  }, function(error) {
-    if (error) {
-      throw new Error(error);
-    }
-  });
-});
-
-router.get('/update', filter.isAuthenticated, function (req,res,next) {
-  var url = req.query.url,
-    hash  = req.query.hash;
-
-  short.update(hash,{
-    URL: url
-  }).then(function (result) {
-    res.send(formatResult("Success","操作成功",result));
-  },function (error) {
-    if (error) {
-      throw new Error(error);
-    }
-  })
+  }else{
+    short.update(hash,{
+      URL: url
+    }).then(function (result) {
+      res.redirect('/admin/list');
+    },function (error) {
+      if (error) {
+        throw new Error(error);
+      }
+    })
+  }
 });
 
 module.exports = router;
-
-
-function formatResult(outcome,message,data){
-  return {
-    "Outcome"	: outcome,
-    "Message"	: message,
-    "Data"		: data
-  }
-}

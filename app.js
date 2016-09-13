@@ -11,7 +11,7 @@ var passport = require('passport');
 var flash    = require('connect-flash');
 
 var app = express();
-app.set('env', 'production');
+app.set('env', 'development');
 
 var config = require('./config/' + app.get('env'));
 app.set('port', config.port);
@@ -56,7 +56,8 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err
+      status: err.status,
+      stack: err.stack
     });
   });
 }
@@ -67,7 +68,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    status: err.status,
+    stack: null
   });
 });
 
@@ -78,7 +80,9 @@ process.on('uncaughtException', function (err) {
 module.exports = app;
 
 mongoose.connect(config.mongodb,function (err) {
-  console.log(err);
+  if(err != undefined){
+    console.log(err);
+  }
 });
 
 // 启动及端口

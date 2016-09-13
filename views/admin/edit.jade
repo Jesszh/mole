@@ -1,0 +1,18 @@
+extends ../shared/layout
+
+
+block content
+	- var hash = model ? model.hash : ''
+	- var URL = model? model.URL : ''
+
+	div(class='container')
+		h1 编辑
+		hr
+		form(action='/admin/edit', method='post')
+			input(name='hash',type='hidden' value='#{hash}')
+			div(class='form-group')
+				label(class='form-label') URL
+				input(class='form-control input-lg',name='URL',type='text' value='#{URL}')
+			button(type='submit', class='btn btn-primary') 提交
+
+
